@@ -1,25 +1,50 @@
 import React, {useState} from 'react'
+import useInput from '../Hooks/useInput'
 
 function UserForm() {
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
+
+    const [firstName, bindFirstName, resetFirstName] = useInput('')
+    const [lastName, bindLastName, resetLastName] = useInput('')
+    const [firstNameError, setFirstNameError] = useState('');
+    const [lastNameError, setLastNameError] = useState('');
 
     const submitHandler = e => {
         e.preventDefault()
-        alert(`Hello ${firstName} ${lastName}`)
+        if(firstName === '' || lastName === ''){
+            setFirstNameError(firstName === '' ? 'First name cannot be empty' : '')
+            setLastNameError(lastName === '' ? 'Last name cannot be empty' : '')
+        } else {
+            setFirstNameError('')
+            setLastNameError('')
+            alert(`Hello ${firstName} ${lastName}`)
+            resetFirstName()
+            resetLastName()
+        }
     }
+    // const clickHandler = () => {
+    //     if (firstName === '' || lastName === '') {
+    //         alert('Both first name and last name cannot be empty');
+    //     } else {
+
+    //         submitHandler();
+    //     }
+    // };
+    
   return (
     <div>
         <form onSubmit ={submitHandler}>
             <div>
                 <label>First name</label>
-                <input vlaue = {firstName} onChange={e => setFirstName(e.target.value)} type = 'text' />
+                <input {...bindFirstName} type = 'text' />
+                <p className= 'error-message'>{firstNameError}</p>
             </div>
             <div>
                 <label>Last name</label>
-                <input vlaue = {lastName} onChange={e => setLastName(e.target.value)} type = 'text' />
+                <input {...bindLastName} type = 'text' />
+                <p className = 'error-message'>{lastNameError}</p>
             </div>
-            <button>Submit</button>
+            <button type = 'submit'>Submit</button>
+            {/* <button onClick={clickHandler}>Submit</button> */}
         </form>
     </div>
   )
